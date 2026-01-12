@@ -19,6 +19,7 @@ type DriftStatus string
 
 const (
 	Sync       DriftStatus = "SYNC"
+	PatchDrift DriftStatus = "PATCH_DRIFT"
 	MinorDrift DriftStatus = "MINOR_DRIFT"
 	MajorDrift DriftStatus = "MAJOR_DRIFT"
 	Unknown    DriftStatus = "UNKNOWN"

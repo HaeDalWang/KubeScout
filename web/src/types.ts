@@ -1,4 +1,4 @@
-export type DriftStatus = "SYNC" | "MINOR_DRIFT" | "MAJOR_DRIFT" | "UNKNOWN";
+export type DriftStatus = "SYNC" | "PATCH_DRIFT" | "MINOR_DRIFT" | "MAJOR_DRIFT" | "UNKNOWN";
 
 export interface Release {
     name: string;

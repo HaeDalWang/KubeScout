@@ -156,7 +156,10 @@ func compareVersions(current, latest string) model.DriftStatus {
 		if vLatest.Major() > vCurrent.Major() {
 			return model.MajorDrift
 		}
-		return model.MinorDrift
+		if vLatest.Minor() > vCurrent.Minor() {
+			return model.MinorDrift
+		}
+		return model.PatchDrift
 	}
 
 	return model.Sync
