@@ -22,6 +22,7 @@ Our goal is to assist Kubernetes operators in maintaining cluster health by visu
 ### 🎯 Core Capabilities (MVP)
 - **Cluster Discovery**: Automatically detects Helm releases across namespaces (Release Name, Chart, Version).
 - **Upstream Check**: Real-time comparison with Artifact Hub for the latest versions.
+- **Smart Hybrid Discovery**: Uses a **Preset Registry** for known charts (ArgoCD, KEDA, etc.) to ensure 100% accuracy, falling back to a **Star-based Search** for others. [Read more](./docs/discovery-logic.md).
 - **Semantic Comparison**:
   - 🟢 **Sync**: Fully up-to-date.
   - 🟡 **Minor Drift**: Minor/Patch updates available (Upgrade Recommended).
