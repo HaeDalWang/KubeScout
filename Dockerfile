@@ -12,7 +12,7 @@ RUN npm run build
 
 # Stage 2: Build Backend (Cross-Compilation)
 # --platform=$BUILDPLATFORM: 항상 네이티브 플랫폼에서 실행
-FROM --platform=$BUILDPLATFORM golang:1.24-alpine AS backend-builder
+FROM --platform=$BUILDPLATFORM golang:1.25-alpine AS backend-builder
 
 # TARGETPLATFORM, TARGETOS, TARGETARCH는 Docker Buildx가 자동 주입
 ARG TARGETOS
