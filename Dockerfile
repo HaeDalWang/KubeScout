@@ -25,9 +25,8 @@ RUN go mod download
 COPY . .
 
 # Embed Frontend Assets
-# Copy built frontend from Stage 1 to the location expected by embed.go
-RUN mkdir -p internal/ui/dist && \
-    cp -r /app/web/dist/* internal/ui/dist/
+# frontend-builder 스테이지에서 빌드된 결과물 복사
+COPY --from=frontend-builder /app/web/dist ./internal/ui/dist
 
 # Build Go binary
 # CGO_ENABLED=0 for static binary
