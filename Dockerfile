@@ -39,7 +39,6 @@ WORKDIR /
 
 COPY --from=backend-builder /app/kubescout /kubescout
 
-# Expose port (default 8080)
 EXPOSE 8080
 
 # Run as non-root user
