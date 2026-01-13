@@ -65,6 +65,12 @@ jobs:
           tar -xzf "oras_${VERSION}_linux_amd64.tar.gz"
           sudo mv oras /usr/local/bin/
 
+      - name: Login to GHCR for oras
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | oras login ${{ env.REGISTRY }} \
+            --username ${{ github.actor }} \
+            --password-stdin
+
       - name: Push Artifact Hub metadata
         run: |
           REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
