@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/haedalwang/kubescout/internal/api"
 	"github.com/haedalwang/kubescout/internal/k8s"
@@ -19,9 +20,14 @@ func main() {
 	server := api.NewServer(helmClient, ahClient)
 
 	// 3. Start Server
-	// TODO: Make port configurable
-	log.Println("Server listening on :8080")
-	if err := server.Start(":8080"); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	
+	addr := ":" + port
+	log.Printf("Server listening on %s", addr)
+	if err := server.Start(addr); err != nil {
 		log.Fatalf("Server failed: %v", err)
 	}
 }

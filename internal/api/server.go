@@ -92,6 +92,7 @@ func (s *Server) handleGetReleases(c echo.Context) error {
 	// 1. List Releases
 	releases, err := s.helmClient.ListReleases()
 	if err != nil {
+		log.Printf("Failed to list releases: %v", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 

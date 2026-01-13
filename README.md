@@ -79,6 +79,21 @@ graph TD
 - [ ] Docker Optimization (Multi-stage build)
 - [ ] PoC Deployment
 
+## 🐳 Docker Support
+
+Build and run KubeScout as a container:
+
+```bash
+# Build the image
+docker build -t kubescout:latest .
+
+# Run with local kubeconfig mounted (Docker)
+docker run -p 8080:8080 \
+  -v ~/.kube:/nonroot/.kube \
+  -e KUBECONFIG=/nonroot/.kube/config \
+  kubescout:latest
+```
+
 ## 💻 Tech Stack
 
 - **Backend**: [Go (Golang)](https://go.dev/)
