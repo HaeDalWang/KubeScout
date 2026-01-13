@@ -5,10 +5,10 @@ description: Zero-Config, Ultra-Lightweight Helm Drift Detection Tool
 type: application
 
 # Helm 차트 버전
-version: 0.1.0
+version: 0.1.1
 
 # 애플리케이션 버전
-appVersion: "0.1.0"
+appVersion: "0.1.1"
 
 keywords:
   - kubernetes
@@ -36,10 +36,12 @@ annotations:
       url: https://github.com/HaeDalWang/KubeScout#readme
   artifacthub.io/images: |
     - name: kubescout
-      image: ghcr.io/haedalwang/kubescout:0.1.0
+      image: ghcr.io/haedalwang/kubescout:0.1.1
       platforms:
         - linux/amd64
         - linux/arm64
   artifacthub.io/changes: |
     - kind: added
-      description: Initial release with Helm drift detection
+      description: Health endpoint for Kubernetes probes
+    - kind: added
+      description: LOG_LEVEL environment variable for log filtering
