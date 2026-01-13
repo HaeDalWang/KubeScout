@@ -141,5 +141,9 @@ affinity: {}
 # 환경변수 설정
 # =============================================================================
 env: []
+  # LOG_LEVEL: DEBUG - 모든 요청 로그 출력
+  # LOG_LEVEL: INFO  - health 체크 제외 (기본값)
+  # LOG_LEVEL: WARN  - 4xx/5xx 에러만 출력
+  # LOG_LEVEL: ERROR - 5xx 에러만 출력
   # - name: LOG_LEVEL
-  #   value: "info"
+  #   value: "INFO"

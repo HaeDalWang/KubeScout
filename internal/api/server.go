@@ -3,6 +3,7 @@ package api
 import (
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -22,12 +23,39 @@ type Server struct {
 	echo       *echo.Echo
 }
 
+// getLogLevel 환경변수에서 로그 레벨 결정
+func getLogLevel() middleware.LoggerConfig {
+	level := strings.ToUpper(os.Getenv("LOG_LEVEL"))
+	
+	config := middleware.DefaultLoggerConfig
+	
+	switch level {
+	case "DEBUG":
+		// 모든 로그 출력
+		config.Skipper = func(c echo.Context) bool { return false }
+	case "WARN", "ERROR":
+		// 4xx, 5xx 에러만 출력
+		config.Skipper = func(c echo.Context) bool {
+			return c.Response().Status < 400
+		}
+	case "INFO":
+		fallthrough
+	default:
+		// 기본: health 체크 제외
+		config.Skipper = func(c echo.Context) bool {
+			return strings.HasPrefix(c.Request().URL.Path, "/api/health")
+		}
+	}
+	
+	return config
+}
+
 func NewServer(helmClient *k8s.HelmClient, ahClient *upstream.ArtifactHubClient) *Server {
 	e := echo.New()
 	e.HideBanner = true
 	
-	// Middleware
-	e.Use(middleware.Logger())
+	// Middleware (로그 레벨 설정 적용)
+	e.Use(middleware.LoggerWithConfig(getLogLevel()))
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS()) // Enable CORS for dev (Frontend on different port)
 
@@ -44,6 +72,9 @@ func NewServer(helmClient *k8s.HelmClient, ahClient *upstream.ArtifactHubClient)
 }
 
 func (s *Server) setupRoutes() {
+	// Health Check (Kubernetes Probe용)
+	s.echo.GET("/api/health", s.handleHealthCheck)
+	
 	// API Group
 	api := s.echo.Group("/api/v1")
 	api.GET("/releases", s.handleGetReleases)
@@ -86,6 +117,13 @@ func (s *Server) setupRoutes() {
 
 func (s *Server) Start(address string) error {
 	return s.echo.Start(address)
+}
+
+// handleHealthCheck Kubernetes liveness/readiness probe용 헬스 체크
+func (s *Server) handleHealthCheck(c echo.Context) error {
+	return c.JSON(http.StatusOK, map[string]string{
+		"status": "ok",
+	})
 }
 
 func (s *Server) handleGetReleases(c echo.Context) error {
