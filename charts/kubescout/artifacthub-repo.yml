@@ -3,7 +3,7 @@
 
 # Verified Publisher 설정을 위해 repositoryID 필요
 # Artifact Hub에서 저장소 등록 후 Control Panel에서 확인 가능
-repositoryID: ""
+repositoryID: "b0680cd9-c26c-4363-b650-1dfd56b98591"
 
 # 저장소 소유자 정보
 owners:
