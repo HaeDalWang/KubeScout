@@ -1,0 +1,57 @@
+# Helm 차트 패키징 및 OCI Registry push
+name: Release Helm Chart
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'charts/**'
+    tags:
+      - 'chart-v*'
+
+env:
+  REGISTRY: ghcr.io
+  CHART_NAME: kubescout
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Helm 설치
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      # OCI Registry 로그인
+      - name: Log in to OCI Registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${{ env.REGISTRY }} \
+            --username ${{ github.actor }} \
+            --password-stdin
+
+      # Chart.yaml에서 버전 추출
+      - name: Get chart version
+        id: chart
+        run: |
+          VERSION=$(grep '^version:' charts/${{ env.CHART_NAME }}/Chart.yaml | awk '{print $2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # Helm 차트 패키징
+      - name: Package Helm chart
+        run: |
+          helm package charts/${{ env.CHART_NAME }}
+
+      # OCI Registry로 push
+      - name: Push chart to OCI Registry
+        run: |
+          helm push ${{ env.CHART_NAME }}-${{ steps.chart.outputs.version }}.tgz \
+            oci://${{ env.REGISTRY }}/${{ github.repository_owner }}/charts
