@@ -6,6 +6,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 ![Status](https://img.shields.io/badge/status-active-success?style=flat-square)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/kubescoute)](https://artifacthub.io/packages/search?repo=kubescoute)
 
 **KubeScout** is a lightweight, single-binary tool designed to run inside your Kubernetes cluster. It immediately visualizes how your installed Helm charts differ from their latest upstream versions—without any complex configuration. Just deploy and see the drift.
 
