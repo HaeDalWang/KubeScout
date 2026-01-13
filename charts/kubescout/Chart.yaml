@@ -1,0 +1,25 @@
+apiVersion: v2
+name: kubescout
+description: Zero-Config, Ultra-Lightweight Helm Drift Detection Tool
+
+type: application
+
+# Helm 차트 버전
+version: 0.1.0
+
+# 애플리케이션 버전
+appVersion: "0.1.0"
+
+keywords:
+  - kubernetes
+  - helm
+  - drift-detection
+  - lightweight
+
+home: https://github.com/HaeDalWang/KubeScout
+sources:
+  - https://github.com/HaeDalWang/KubeScout
+
+maintainers:
+  - name: HaeDalWang
+    url: https://github.com/HaeDalWang

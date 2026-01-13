@@ -1,0 +1,14 @@
+{{- if .Values.rbac.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "kubescout.fullname" . }}
+  labels:
+    {{- include "kubescout.labels" . | nindent 4 }}
+rules:
+  # Helm은 release 정보를 Secret에 저장함
+  # 전체 namespace의 Helm release 조회를 위해 필요
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+{{- end }}

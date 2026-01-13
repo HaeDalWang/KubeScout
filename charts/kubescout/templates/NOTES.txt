@@ -1,0 +1,46 @@
+🔭 KubeScout이 성공적으로 설치되었습니다!
+
+배포 정보:
+  릴리스 이름: {{ .Release.Name }}
+  네임스페이스: {{ .Release.Namespace }}
+
+서비스 접근 방법:
+
+{{- if .Values.ingress.enabled }}
+
+1. Ingress 사용:
+{{- range $host := .Values.ingress.hosts }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}
+{{- end }}
+
+{{- else if .Values.httpRoute.enabled }}
+
+1. HTTPRoute (Gateway API) 사용:
+{{- with .Values.httpRoute.hostnames }}
+{{- range . }}
+  http://{{ . }}
+{{- end }}
+{{- end }}
+
+{{- else if contains "NodePort" .Values.service.type }}
+
+1. NodePort 사용:
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "kubescout.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+
+{{- else if contains "LoadBalancer" .Values.service.type }}
+
+1. LoadBalancer 사용 (IP 할당까지 잠시 대기):
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "kubescout.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+  echo http://$SERVICE_IP:{{ .Values.service.port }}
+
+{{- else if contains "ClusterIP" .Values.service.type }}
+
+1. Port-Forward 사용:
+  kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "kubescout.fullname" . }} 8080:{{ .Values.service.port }}
+  브라우저에서 http://localhost:8080 접속
+
+{{- end }}
+
+📊 Helm Drift 대시보드를 확인하세요!

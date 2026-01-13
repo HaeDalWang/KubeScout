@@ -1,0 +1,145 @@
+# KubeScout Helm Chart 기본 설정
+# Ultra-Lightweight 철학에 맞게 최소 리소스로 구성
+
+# =============================================================================
+# 이미지 설정
+# =============================================================================
+image:
+  repository: ghcr.io/haedalwang/kubescout
+  # 기본값: Chart appVersion 사용
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+# =============================================================================
+# 리소스 설정 (Ultra-Lightweight)
+# 단일 바이너리로 매우 적은 리소스만 필요
+# =============================================================================
+resources:
+  limits:
+    cpu: 50m
+    memory: 64Mi
+  requests:
+    cpu: 10m
+    memory: 32Mi
+
+# =============================================================================
+# Deployment 설정
+# =============================================================================
+replicaCount: 1
+
+# Pod 레이블/어노테이션 추가
+podAnnotations: {}
+podLabels: {}
+
+# =============================================================================
+# 서비스 설정
+# =============================================================================
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+# =============================================================================
+# Ingress 설정 (기존 Ingress Controller용)
+# =============================================================================
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: kubescout.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: kubescout-tls
+  #    hosts:
+  #      - kubescout.local
+
+# =============================================================================
+# HTTPRoute 설정 (Gateway API 표준)
+# =============================================================================
+httpRoute:
+  enabled: false
+  # 연결할 Gateway 이름
+  parentRefs:
+    - name: ""
+      namespace: ""
+  hostnames: []
+  # - kubescout.example.com
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs: []
+      # 기본적으로 자동 설정됨
+
+# =============================================================================
+# ServiceAccount 및 RBAC 설정
+# =============================================================================
+serviceAccount:
+  # ServiceAccount 생성 여부
+  create: true
+  # 커스텀 이름 (비어있으면 fullname 사용)
+  name: ""
+  annotations: {}
+  automount: true
+
+# RBAC 설정
+rbac:
+  # ClusterRole/ClusterRoleBinding 생성 여부
+  create: true
+
+# =============================================================================
+# 보안 설정
+# =============================================================================
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# =============================================================================
+# Probe 설정
+# =============================================================================
+livenessProbe:
+  httpGet:
+    path: /api/health
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /api/health
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+# =============================================================================
+# Node 스케줄링 설정
+# =============================================================================
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# =============================================================================
+# 환경변수 설정
+# =============================================================================
+env: []
+  # - name: LOG_LEVEL
+  #   value: "info"
