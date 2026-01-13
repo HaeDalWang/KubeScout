@@ -50,8 +50,9 @@ jobs:
         run: |
           helm package charts/${{ env.CHART_NAME }}
 
-      # OCI Registry로 push
+      # OCI Registry로 push (소문자로 변환 필수)
       - name: Push chart to OCI Registry
         run: |
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           helm push ${{ env.CHART_NAME }}-${{ steps.chart.outputs.version }}.tgz \
-            oci://${{ env.REGISTRY }}/${{ github.repository_owner }}/charts
+            oci://${{ env.REGISTRY }}/${REPO_OWNER}/charts
