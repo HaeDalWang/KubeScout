@@ -95,6 +95,45 @@ docker run -p 8080:8080 \
   kubescout:latest
 ```
 
+## ☸️ Helm Chart Quickstart
+
+Install KubeScout in your Kubernetes cluster using Helm:
+
+```bash
+# Install from OCI Registry
+helm install kubescout oci://ghcr.io/haedalwang/charts/kubescout \
+  -n kubescout --create-namespace
+
+# Verify installation
+kubectl get pods -n kubescout
+
+# Access the dashboard
+kubectl port-forward -n kubescout svc/kubescout 8080:80
+# Open http://localhost:8080
+```
+
+### With Ingress
+
+```bash
+helm install kubescout oci://ghcr.io/haedalwang/charts/kubescout \
+  -n kubescout --create-namespace \
+  --set ingress.enabled=true \
+  --set ingress.className=nginx \
+  --set "ingress.hosts[0].host=kubescout.example.com" \
+  --set "ingress.hosts[0].paths[0].path=/" \
+  --set "ingress.hosts[0].paths[0].pathType=Prefix"
+```
+
+### With Gateway API (HTTPRoute)
+
+```bash
+helm install kubescout oci://ghcr.io/haedalwang/charts/kubescout \
+  -n kubescout --create-namespace \
+  --set httpRoute.enabled=true \
+  --set "httpRoute.parentRefs[0].name=main-gateway" \
+  --set "httpRoute.parentRefs[0].namespace=gateway-system"
+```
+
 ## 💻 Tech Stack
 
 - **Backend**: [Go (Golang)](https://go.dev/)
