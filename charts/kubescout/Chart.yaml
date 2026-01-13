@@ -22,4 +22,24 @@ sources:
 
 maintainers:
   - name: HaeDalWang
+    email: svvwac98@gmail.com
     url: https://github.com/HaeDalWang
+
+# Artifact Hub 메타데이터
+annotations:
+  artifacthub.io/category: monitoring-logging
+  artifacthub.io/license: MIT
+  artifacthub.io/links: |
+    - name: GitHub
+      url: https://github.com/HaeDalWang/KubeScout
+    - name: Documentation
+      url: https://github.com/HaeDalWang/KubeScout#readme
+  artifacthub.io/images: |
+    - name: kubescout
+      image: ghcr.io/haedalwang/kubescout:0.1.0
+      platforms:
+        - linux/amd64
+        - linux/arm64
+  artifacthub.io/changes: |
+    - kind: added
+      description: Initial release with Helm drift detection

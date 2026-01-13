@@ -56,3 +56,19 @@ jobs:
           REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           helm push ${{ env.CHART_NAME }}-${{ steps.chart.outputs.version }}.tgz \
             oci://${{ env.REGISTRY }}/${REPO_OWNER}/charts
+
+      # Artifact Hub 메타데이터 push (oras 사용)
+      - name: Install oras
+        run: |
+          VERSION="1.2.0"
+          curl -LO "https://github.com/oras-project/oras/releases/download/v${VERSION}/oras_${VERSION}_linux_amd64.tar.gz"
+          tar -xzf "oras_${VERSION}_linux_amd64.tar.gz"
+          sudo mv oras /usr/local/bin/
+
+      - name: Push Artifact Hub metadata
+        run: |
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          oras push \
+            ${{ env.REGISTRY }}/${REPO_OWNER}/charts/${{ env.CHART_NAME }}:artifacthub.io \
+            --config /dev/null:application/vnd.cncf.artifacthub.config.v1+yaml \
+            charts/${{ env.CHART_NAME }}/artifacthub-repo.yml:application/vnd.cncf.artifacthub.repository-metadata.layer.v1.yaml

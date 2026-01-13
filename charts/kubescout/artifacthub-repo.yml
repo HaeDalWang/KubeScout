@@ -1,0 +1,11 @@
+# Artifact Hub 저장소 메타데이터
+# https://artifacthub.io/docs/topics/repositories/
+
+# Verified Publisher 설정을 위해 repositoryID 필요
+# Artifact Hub에서 저장소 등록 후 Control Panel에서 확인 가능
+repositoryID: ""
+
+# 저장소 소유자 정보
+owners:
+  - name: HaeDalWang
+    email: svvwac98@gmail.com
