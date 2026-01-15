@@ -12,6 +12,9 @@
 
 ---
 
+## 한국어 설명 추가
+안녕 나느 배승도야
+
 ## 🚀 Mission
 
 **"Zero-Config, Ultra-Lightweight."**
